@@ -10,11 +10,14 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.selection.selectable
+import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -22,8 +25,12 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Checkbox
+import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.RadioButton
+import androidx.compose.material3.RadioButtonDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
@@ -34,6 +41,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -78,6 +86,8 @@ fun HomeScreen() {
         JCButton("Click Me")
         JCTextField()
         JCSwitch()
+        JCRadioButton()
+        JCCheckBox()
     }
 }
 
@@ -150,7 +160,7 @@ fun JCButton(btnText: String) {
 
 @Composable
 fun JCTextField() {
-    var inputValue by remember { mutableStateOf("") }
+    var inputValue by rememberSaveable { mutableStateOf("") }
 
     Column(
         modifier = Modifier
@@ -215,9 +225,11 @@ fun JCSwitch() {
     val switchState = remember { mutableStateOf(true) }
 
     Column(
-        modifier = Modifier.fillMaxWidth().padding(
-            0.dp, 8.dp, 0.dp, 0.dp
-        ),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(
+                0.dp, 8.dp, 0.dp, 0.dp
+            ),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top
     ) {
@@ -234,5 +246,75 @@ fun JCSwitch() {
                 uncheckedTrackColor = Color.LightGray // Color of the track when unchecked
             )
         )
+    }
+}
+
+@Composable
+fun JCRadioButton() {
+    val options = listOf("One", "Two", "Three")
+    var (selectedOption, onOptionSelected) = remember { mutableStateOf(options[0]) }
+    val context = LocalContext.current
+
+    Row(
+        modifier = Modifier
+            .selectableGroup()
+            .fillMaxWidth()
+            .padding(0.dp, 8.dp, 0.dp, 0.dp),
+        horizontalArrangement = Arrangement.Center,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        options.forEach { rbText ->
+            Row(
+                modifier = Modifier.selectable(
+                    selected = (rbText == selectedOption),
+                    onClick = {
+                        selectedOption = rbText
+                        onOptionSelected(rbText)
+                    }
+                ),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                RadioButton(
+                    selected = (rbText == selectedOption),
+                    onClick = {
+                        selectedOption = rbText
+                        onOptionSelected(rbText)
+                        Toast.makeText(context, "Selected: $rbText", Toast.LENGTH_SHORT).show()
+                    },
+                    enabled = true,
+                    colors = RadioButtonDefaults.colors(
+                        selectedColor = Color.Green,
+                        unselectedColor = Color.Gray
+                    )
+                )
+                Text(text = rbText)
+            }
+        }
+    }
+}
+
+@Composable
+fun JCCheckBox() {
+    var checkBoxState by rememberSaveable { mutableStateOf(true) }
+
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(0.dp, 8.dp, 0.dp, 0.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Center,
+    ) {
+        Checkbox(
+            checked = checkBoxState,
+            onCheckedChange = {
+                checkBoxState = it
+            },
+            colors = CheckboxDefaults.colors(
+                checkedColor = Color.Green,
+                uncheckedColor = Color.Gray,
+                checkmarkColor = Color.Red
+            )
+        )
+        Text(text = "CheckBox Text")
     }
 }
