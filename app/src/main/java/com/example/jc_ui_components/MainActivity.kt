@@ -40,7 +40,6 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -222,7 +221,7 @@ fun JCTextField() {
 @Composable
 fun JCSwitch() {
     val context = LocalContext.current
-    val switchState = remember { mutableStateOf(true) }
+    val switchState = rememberSaveable { mutableStateOf(true) }
 
     Column(
         modifier = Modifier
@@ -252,7 +251,7 @@ fun JCSwitch() {
 @Composable
 fun JCRadioButton() {
     val options = listOf("One", "Two", "Three")
-    var (selectedOption, onOptionSelected) = remember { mutableStateOf(options[0]) }
+    var (selectedOption, onOptionSelected) = rememberSaveable { mutableStateOf(options[0]) }
     val context = LocalContext.current
 
     Row(
