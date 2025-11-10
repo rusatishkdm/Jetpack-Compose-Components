@@ -8,6 +8,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -17,13 +18,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.selection.selectable
-import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -33,12 +33,14 @@ import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.RadioButtonDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
@@ -70,8 +72,10 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            JCUIComponentsTheme {
-                Surface(color = MaterialTheme.colorScheme.background) {
+            JCUIComponentsTheme(darkTheme = false, dynamicColor = false) {
+                //Surface(color = MaterialTheme.colorScheme.background) {
+                //Surface(color = Color.White) {
+                Surface(color = Color.White) {
                     HomeScreen()
                 }
             }
@@ -93,6 +97,7 @@ fun HomeScreen() {
         JCRadioButton()
         JCCheckBox()
         JCFloatingButton()
+        JCMaterialButtons()
     }
 }
 
@@ -362,7 +367,92 @@ fun JCFloatingButton() {
             containerColor = Green,
             contentColor = Color.White,
             icon = { Icon(Icons.Filled.Add, "Add") },
-            text ={  Text(text = "FAB 3") }
+            text = { Text(text = "FAB 3") }
         )
+    }
+}
+
+@Composable
+fun JCMaterialButtons() {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(0.dp, 22.dp, 0.dp, 0.dp),
+    ) {
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            AllButtons()
+        }
+    }
+}
+
+@Composable
+fun AllButtons() {
+    Text(text = "MAT-Buttons", fontSize = 22.sp)
+
+    Row {
+        // Normal button
+        Button(
+            onClick = {},
+            modifier = Modifier.padding(8.dp)
+        ) {
+            Text(text = "Main Button", color = MaterialTheme.colorScheme.onPrimary)
+        }
+
+        // Text Button
+        TextButton(
+            onClick = {},
+            modifier = Modifier.padding(8.dp)
+        ) {
+            Text(text = "Text Button")
+        }
+    }
+
+    Row {
+        // Elevated Button
+        Button(
+            onClick = {},
+            modifier = Modifier.padding(8.dp),
+            elevation = ButtonDefaults.buttonElevation(defaultElevation = 10.dp)
+        ) {
+            Text("Elevated Btn", color = MaterialTheme.colorScheme.onPrimary)
+        }
+
+        // Rounded Button
+        Button(
+            onClick = {},
+            modifier = Modifier.padding(8.dp),
+            shape = RoundedCornerShape(30.dp)
+        ) {
+            Text(text = "Rounded Button", color = MaterialTheme.colorScheme.onPrimary)
+        }
+    }
+
+    Row {
+        // OutLined Icon
+        OutlinedButton(
+            onClick = {},
+            modifier = Modifier.padding(8.dp),
+            border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary),
+        ) {
+            Icon(Icons.Filled.LocationOn, "Add")
+            Text(text = "OutLined Btn With Icon")
+        }
+    }
+
+    Row {
+        Button(
+            onClick = {},
+            modifier = Modifier.padding(8.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color.DarkGray,
+                contentColor = MaterialTheme.colorScheme.surface
+            )
+        ) {
+            Text(text = "Button Custom Color", color = MaterialTheme.colorScheme.onPrimary)
+        }
     }
 }
