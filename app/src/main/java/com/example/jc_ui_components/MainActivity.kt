@@ -100,7 +100,7 @@ class MainActivity : ComponentActivity() {
                     }
                 }*/
 
-                Surface() {
+                Surface {
                     HomeScreen()
                 }
             }
