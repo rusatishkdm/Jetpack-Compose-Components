@@ -7,21 +7,17 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeContent
 import androidx.compose.foundation.layout.safeContentPadding
-import androidx.compose.foundation.layout.safeGestures
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -30,15 +26,20 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconToggleButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.RadioButton
@@ -54,6 +55,7 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -84,12 +86,8 @@ class MainActivity : ComponentActivity() {
         setContent {
             //JCUIComponentsTheme(darkTheme = false, dynamicColor = false) {
             JCUIComponentsTheme(darkTheme = false, dynamicColor = false) {
-                //Surface(color = MaterialTheme.colorScheme.background) {
-                //Surface(color = Color.White) {
-                /*Surface(color = Color.White) {
-                    Scaffold(
-                        contentWindowInsets = WindowInsets.safeContent
-                    ){ innerPadding ->
+                Surface(color = Color.White) {
+                    Scaffold { innerPadding ->
                         Column(
                             modifier = Modifier
                                 .fillMaxSize()
@@ -98,11 +96,11 @@ class MainActivity : ComponentActivity() {
                             HomeScreen()
                         }
                     }
-                }*/
-
-                Surface {
-                    HomeScreen()
                 }
+
+                /*Surface(color = Color.White) {
+                    HomeScreen()
+                }*/
             }
         }
     }
@@ -114,9 +112,9 @@ fun HomeScreen() {
         modifier = Modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
-            .safeContentPadding()
+            .padding(16.dp)
     ) {
-        SayHelloText("Satish")
+        JCText("Satish")
         JCButton("Click Me")
         JCTextField()
         JCSwitch()
@@ -124,6 +122,7 @@ fun HomeScreen() {
         JCCheckBox()
         JCFloatingButton()
         JCMaterialButtons()
+        JCIconToggleButton()
     }
 }
 
@@ -138,11 +137,11 @@ fun HomeScreenPreview() {
 }
 
 @Composable
-fun SayHelloText(name: String) {
+fun JCText(name: String) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(0.dp, 30.dp, 0.dp, 0.dp),
+            .padding(0.dp, 8.dp, 0.dp, 0.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top,
     ) {
@@ -181,7 +180,7 @@ fun JCButton(btnText: String) {
                 containerColor = Color.Gray,
                 contentColor = Color.White
             ),
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
         ) {
             Text(
                 text = btnText,
@@ -405,12 +404,18 @@ fun JCMaterialButtons() {
             .fillMaxSize()
             .padding(0.dp, 22.dp, 0.dp, 0.dp),
     ) {
-        Column(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+        Card(
+            colors = CardDefaults.cardColors(containerColor = Color.LightGray),
+            elevation = CardDefaults.cardElevation(6.dp),
+            shape = RoundedCornerShape(10.dp)
         ) {
-            AllButtons()
+            Column(
+                modifier = Modifier.fillMaxWidth().padding(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                AllButtons()
+            }
         }
     }
 }
@@ -493,10 +498,34 @@ fun AllButtons() {
             text = "Custom Gradient",
             color = Color.White,
             modifier = Modifier
-                .clickable(onClick = {})
-                .clip(RoundedCornerShape(4.dp))
+                .clip(RoundedCornerShape(6.dp))
                 .background(brush = gradient)
                 .padding(12.dp)
         )
+    }
+}
+
+@Composable
+fun JCIconToggleButton() {
+    val checkedState = remember { mutableStateOf(false) }
+
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.Center,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(text = if (checkedState.value) "Like" else "Dislike")
+
+        IconToggleButton(
+            checked = checkedState.value,
+            onCheckedChange = {
+                checkedState.value = !checkedState.value
+            }
+        ) {
+            Icon(
+                imageVector = if (checkedState.value) Icons.Filled.Favorite else Icons.Filled.FavoriteBorder,
+                contentDescription = "IconToggleButton",
+            )
+        }
     }
 }
