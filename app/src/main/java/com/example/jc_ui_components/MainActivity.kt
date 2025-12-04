@@ -25,6 +25,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.LocationOn
@@ -38,12 +39,17 @@ import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconToggleButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.RadioButtonDefaults
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Snackbar
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
@@ -55,6 +61,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -79,6 +86,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.jc_ui_components.ui.theme.Green
 import com.example.jc_ui_components.ui.theme.JCUIComponentsTheme
+import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -87,13 +95,42 @@ class MainActivity : ComponentActivity() {
         setContent {
             //JCUIComponentsTheme(darkTheme = false, dynamicColor = false) {
             JCUIComponentsTheme(darkTheme = false, dynamicColor = false) {
+                val scope = rememberCoroutineScope()
+                val snackBarHostState = remember { SnackbarHostState() }
+
                 Surface(color = Color.White) {
-                    Scaffold { innerPadding ->
+                    Scaffold(
+                        snackbarHost = {
+                            SnackbarHost(snackBarHostState) { data ->
+                                Box(
+                                    modifier = Modifier.fillMaxSize().padding(0.dp, 40.dp, 0.dp, 0.dp),
+                                    contentAlignment = Alignment.TopCenter
+                                ) {
+                                    Snackbar(snackbarData = data)
+                                }
+                            }
+                        }
+                    ) { innerPadding ->
                         Column(
                             modifier = Modifier
                                 .fillMaxSize()
                                 .padding(innerPadding)
                         ) {
+                            Button(
+                                onClick = {
+                                    scope.launch {
+                                        snackBarHostState.showSnackbar(
+                                            message = "This is a snackBar message",
+                                            withDismissAction = true,
+                                            duration = SnackbarDuration.Short
+                                        )
+                                    }
+                                },
+                                border = BorderStroke(1.dp, Color.Black),
+                                modifier = Modifier.fillMaxWidth().padding(8.dp),
+                            ) {
+                                Text("Show SnackBar")
+                            }
                             HomeScreen()
                         }
                     }
@@ -120,6 +157,7 @@ fun HomeScreen() {
         JCFloatingButton()
         JCMaterialButtons()
         JCIconToggleButton()
+        JCSnackBar()
     }
 }
 
@@ -532,6 +570,34 @@ fun JCIconToggleButton() {
                 imageVector = if (checkedState.value) Icons.Filled.Favorite else Icons.Filled.FavoriteBorder,
                 contentDescription = "IconToggleButton",
             )
+        }
+    }
+}
+
+@Composable
+fun JCSnackBar() {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(0.dp, 8.dp, 0.dp, 0.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Top
+    ) {
+        Snackbar(
+            modifier = Modifier.padding(4.dp),
+            actionOnNewLine = true,
+            action = {
+                TextButton(onClick = {}) {
+                    Text(text = "Action")
+                }
+            },
+            dismissAction = {
+                IconButton(onClick = {}) {
+                    Icon(Icons.Filled.Clear, "Close")
+                }
+            }
+        ) {
+            Text("SnackBar Message", fontSize = 16.sp)
         }
     }
 }
