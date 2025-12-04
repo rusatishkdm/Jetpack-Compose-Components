@@ -17,7 +17,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeContentPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -69,10 +68,12 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -97,10 +98,6 @@ class MainActivity : ComponentActivity() {
                         }
                     }
                 }
-
-                /*Surface(color = Color.White) {
-                    HomeScreen()
-                }*/
             }
         }
     }
@@ -153,7 +150,11 @@ fun JCText(name: String) {
             modifier = Modifier
                 .background(Color.Gray)
                 .padding(6.dp),
-            lineHeight = 10.sp
+            lineHeight = 10.sp,
+            fontStyle = FontStyle.Normal,
+            fontWeight = FontWeight.ExtraBold,
+            fontFamily = FontFamily.SansSerif,
+            overflow = TextOverflow.Ellipsis
         )
     }
 }
@@ -223,13 +224,15 @@ fun JCTextField() {
                 focusedContainerColor = Color.LightGray,
                 unfocusedContainerColor = Color.LightGray,
                 errorCursorColor = Color.Red,
-                //focusedIndicatorColor = Color.Transparent,
-                //unfocusedIndicatorColor = Color.Transparent,
+                focusedLabelColor = Color.Black,
+                focusedIndicatorColor = Color.DarkGray,
+                unfocusedIndicatorColor = Color.DarkGray,
                 //disabledIndicatorColor = Color.Transparent,
             ),
             keyboardOptions = KeyboardOptions(
                 capitalization = KeyboardCapitalization.Sentences,
-                keyboardType = KeyboardType.Text
+                keyboardType = KeyboardType.Text,
+                imeAction = ImeAction.Done
             ),
             keyboardActions = KeyboardActions(
                 onDone = {
@@ -407,10 +410,13 @@ fun JCMaterialButtons() {
         Card(
             colors = CardDefaults.cardColors(containerColor = Color.LightGray),
             elevation = CardDefaults.cardElevation(6.dp),
+            border = BorderStroke(0.5.dp, color = Color.Gray),
             shape = RoundedCornerShape(10.dp)
         ) {
             Column(
-                modifier = Modifier.fillMaxWidth().padding(16.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp, 16.dp, 8.dp, 16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
